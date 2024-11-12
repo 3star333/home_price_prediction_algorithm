@@ -5,6 +5,7 @@ import sklearn
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn import metrics
+from sklearn.metrics import mean_squared_error, r2_score
 
 data = pd.read_csv('California_Houses.csv')
 
@@ -42,8 +43,27 @@ model_B.fit(X_train_B, y_train)
 #step 6-7 to do,
 # Use metrics like Mean Squared Error (MSE) and R² score to compare the performance of both models.
 # for step 7 inerpret the better model by testing which one predicts the best value#
+pred_A = model_A.predict(X_test_A)
+pred_B = model_B.predict(X_test_B)
 
+mse_A = mean_squared_error(y_test, pred_A)
+r2_A = r2_score(y_test, pred_A)
 
+mse_B = mean_squared_error(y_test, pred_B)
+r2_B = r2_score(y_test, pred_B)
+
+print("Model A Mean Squared Error:", mse_A)
+print("Model A R² Score:", r2_A)
+print("\nModel B Mean Squared Error:", mse_B)
+print("Model B R² Score:", r2_B)
+
+if r2_A > r2_B:
+    print("\nModel A has a higher R² score than Model B and performs better.")
+elif r2_B > r2_A:
+    print("\nModel B has a higher R² score than Model A and performs better.")
+else:
+    print("\nBoth models have similar performance.")
+    
 #program example usage (no userinput yet)
 compare_2_homes = pd.DataFrame({
     'Median Income': [5.5, 6.8],
@@ -55,12 +75,22 @@ compare_2_homes = pd.DataFrame({
     'Distance to Los Angeles': [10000, 50000],
     'Distance to San Diego': [50000, 10000],
     'Distance to San Jose': [450000, 400000],
-    'Distance to San Francisco': [500000, 600000]
+    'Distance to San Francisco': [500000, 600000] 
 })
-#make predictions here by calling the prediction function buliltin
-# model_N.predict(compare_2_homes)
 
-#print the results 
-# Display predictions using loop
-# for i, price in enumerate(predicted_price, 1):
-#    print(f"Predicted Price for Property {i}: ${price:,.2f}")
+compare_2_homes.columns = ['Median_Income', 'Median_Age', 'Tot_Rooms', 'Tot_Bedrooms', 
+'Population', 'Households', 'Distance_to_LA', 'Distance_to_SanDiego', 'Distance_to_SanJose', 'Distance_to_SanFrancisco']
+
+# Add the min_distance_to_city column for Model B
+compare_2_homes['min_distance_to_city'] = compare_2_homes[['Distance_to_LA', 'Distance_to_SanDiego', 
+'Distance_to_SanJose', 'Distance_to_SanFrancisco']].min(axis=1)
+
+predictionB = model_B.predict(compare_2_homes[features_B.columns])
+
+print() # format line
+
+# Display predictions
+for i, price in enumerate(predictionB, 1):
+    print(f"Predicted Price for Property {i}: ${price:,.2f}")
+
+print() #format line
