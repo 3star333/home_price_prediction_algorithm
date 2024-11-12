@@ -1,2 +1,4 @@
 Project by:
-(name)
+Carter Quan
+Karlos De Los Santos
+Leo Narinians
