@@ -27,7 +27,7 @@ target = data['Median_House_Value']
 
 # Split the data into training and testing sets
 # about 80% of the data set is training while 0.2 or 20% is the tessting set
-from sklearn.model_selection import train_test_split
+# random_state is the rng seed used for the random data splitting for training
 X_train_A, X_test_A, y_train, y_test = train_test_split(features_A, target, test_size=0.2, random_state=42)
 X_train_B, X_test_B, _, _ = train_test_split(features_B, target, test_size=0.2, random_state=42)
 
@@ -40,8 +40,7 @@ model_A.fit(X_train_A, y_train)
 model_B = LinearRegression()
 model_B.fit(X_train_B, y_train)
 
-#step 6-7 to do,
-# Use metrics like Mean Squared Error (MSE) and R² score to compare the performance of both models.
+# Use metrics like Mean Squared Error (MSE) and R^2 score to compare the performance of both models.
 # for step 7 inerpret the better model by testing which one predicts the best value#
 pred_A = model_A.predict(X_test_A)
 pred_B = model_B.predict(X_test_B)
@@ -64,7 +63,7 @@ elif r2_B > r2_A:
 else:
     print("\nBoth models have similar performance.")
     
-#program example usage (no userinput yet)
+#Presentation Example Usage
 compare_2_homes = pd.DataFrame({
     'Median Income': [5.5, 6.8],
     'Median Age': [15, 10],
@@ -94,3 +93,13 @@ for i, price in enumerate(predictionB, 1):
     print(f"Predicted Price for Property {i}: ${price:,.2f}")
 
 print() #format line
+
+# Scatter plot of Predicted vs Actual House Values for Model A
+plt.figure(figsize=(8, 6))
+plt.scatter(y_test, pred_B, alpha=0.5, color="blue")
+plt.plot([y_test.min(), y_test.max()], [y_test.min(), y_test.max()], 'r--', label="Ideal Fit Line")
+plt.title("Model B: Predicted vs Actual House Values")
+plt.xlabel("Actual House Value")
+plt.ylabel("Predicted House Value")
+plt.legend()
+plt.show()
